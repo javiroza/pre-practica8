@@ -71,8 +71,8 @@ program pre_practica8
     call write(12)
 
     ! ----------------------- Quart estat (n=4) ---------------------------- !
-    E1=100.d0
-    E2=99.d0
+    E1=65.d0
+    E2=64.d0
     call artiller(E1,E2,nequs,N,vectphi)
     call write(11)
     call trapezoids(0.d0,1.d0,N,abs(vectphi)**2.d0,integral)
@@ -111,7 +111,7 @@ subroutine RLSTN3(x,dx,nequs,yyin,yyout)
         k3(i)=dyout(i)
 
         ! Càlcul del vector yyout 
-        yyout(i)=yyin(i)+dx/9.d0*(2.d0*k1(i)+3.d0*k2(i)+3.d0*k3(i))
+        yyout(i)=yyin(i)+dx/9.d0*(2.d0*k1(i)+3.d0*k2(i)+4.d0*k3(i))
     enddo
 
     return 
@@ -145,7 +145,7 @@ subroutine artiller(E1,E2,nequs,npassos,vectphi)
     integer i,j
     double precision E1,E2,yyin(nequs),yyout(nequs)
     integer nequs,npassos,N
-    double precision phiE1,phiE2,phiE3,vectphi(npassos),E,E3,V,dx
+    double precision phiE1,phiE2,phiE3,vectphi(npassos),E,E3,V,dx,x
     common/cts/V,E
 
     N=npassos
@@ -157,7 +157,7 @@ subroutine artiller(E1,E2,nequs,npassos,vectphi)
         yyin(2)=0.25d0
         E=E1
         do i=1,N
-            call RLSTN3(i*dx,dx,nequs,yyin,yyout)
+            call RLSTN3(x,dx,nequs,yyin,yyout)
             vectphi(i)=yyout(1)
             ! Reescrivim variables
             yyin=yyout
@@ -169,7 +169,7 @@ subroutine artiller(E1,E2,nequs,npassos,vectphi)
         yyin(2)=0.25d0
         E=E2
         do i=1,N
-            call RLSTN3(i*dx,dx,nequs,yyin,yyout)
+            call RLSTN3(x,dx,nequs,yyin,yyout)
             vectphi(i)=yyout(1)
             ! Reescrivim variables
             yyin=yyout
@@ -183,7 +183,7 @@ subroutine artiller(E1,E2,nequs,npassos,vectphi)
         E3=(E1*phiE2-E2*phiE1)/(phiE2-phiE1)
         E=E3
         do i=1,N
-            call RLSTN3(i*dx,dx,nequs,yyin,yyout)
+            call RLSTN3(x,dx,nequs,yyin,yyout)
             vectphi(i)=yyout(1)
             ! Reescrivim variables
             yyin=yyout
@@ -192,6 +192,7 @@ subroutine artiller(E1,E2,nequs,npassos,vectphi)
         write(11,*) E3,phiE3
 
         if (abs(phiE3).lt.0.00005d0) then
+            print*,E3
             exit
         else
             E1=E2
