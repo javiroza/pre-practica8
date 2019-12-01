@@ -39,6 +39,7 @@ program pre_practica8
     call trapezoids(0.d0,1.d0,N,abs(vectphi)**2.d0,integral)
     vectphi=vectphi/dsqrt(integral)
     ! Escrivim el vector propi en un arxiu
+    write(12,*) 0.d0,0.d0
     do i=1,N
         write(12,*) i*dx,vectphi(i)
     enddo
@@ -51,6 +52,7 @@ program pre_practica8
     call write(11)
     call trapezoids(0.d0,1.d0,N,abs(vectphi)**2.d0,integral)
     vectphi=vectphi/dsqrt(integral)
+    write(12,*) 0.d0,0.d0
     ! Escrivim el vector propi en un arxiu
     do i=1,N
         write(12,*) i*dx,vectphi(i)
@@ -64,6 +66,7 @@ program pre_practica8
     call write(11)
     call trapezoids(0.d0,1.d0,N,abs(vectphi)**2.d0,integral)
     vectphi=vectphi/dsqrt(integral)
+    write(12,*) 0.d0,0.d0
     ! Escrivim el vector propi en un arxiu
     do i=1,N
         write(12,*) i*dx,vectphi(i)
@@ -78,6 +81,7 @@ program pre_practica8
     call trapezoids(0.d0,1.d0,N,abs(vectphi)**2.d0,integral)
     vectphi=vectphi/dsqrt(integral)
     ! Escrivim el vector propi en un arxiu
+    write(12,*) 0.d0,0.d0
     do i=1,N
         write(12,*) i*dx,vectphi(i)
     enddo
