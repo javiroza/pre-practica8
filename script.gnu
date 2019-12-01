@@ -1,5 +1,5 @@
 # Format i nom de la imatge
-set term png enhanced
+set term pngcairo enhanced font 'Verdana,9'
 set output "P8-1920-fig.png"
 
 # Permet escriure lletres gregues i altres mogudes
