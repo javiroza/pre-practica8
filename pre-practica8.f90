@@ -94,7 +94,7 @@ end program pre_practica8
 ! Subrutina RLSTN3 --> Calcula un pas del mètode de Ralston de tercer ordre per un sistema
 ! d'n equacions de primer ordre acoblades
 subroutine RLSTN3(x,dx,nequs,yyin,yyout)
-    ! x --> Punt a partir del qual es fa el pas
+    ! x --> Variable independent del problema
     ! dx --> Pas 
     ! nequs --> Nombre d'equacions 
     ! yyin --> Vector amb les dades del punt anterior
@@ -105,18 +105,16 @@ subroutine RLSTN3(x,dx,nequs,yyin,yyout)
     double precision k1(nequs),k2(nequs),k3(nequs)
     double precision dyout(nequs) ! Vector mut necessari per cridar la subrutina derivades
 
-    do i=1,nequs 
-        ! Càlcul dels vectors k1,k2,k3 
-        call derivades(nequs,x,yyin,dyout)
-        k1(i)=dyout(i)
-        call derivades(nequs,x,yyin+dx/2.d0*k1,dyout)
-        k2(i)=dyout(i)
-        call derivades(nequs,x,yyin+(3.d0*dx/4.d0)*k2,dyout)
-        k3(i)=dyout(i)
+    ! Càlcul dels vectors k1,k2,k3 
+    call derivades(nequs,x,yyin,dyout)
+    k1=dyout
+    call derivades(nequs,x,yyin+dx/2.d0*k1,dyout)
+    k2=dyout
+    call derivades(nequs,x,yyin+(3.d0*dx/4.d0)*k2,dyout)
+    k3=dyout
 
-        ! Càlcul del vector yyout 
-        yyout(i)=yyin(i)+dx/9.d0*(2.d0*k1(i)+3.d0*k2(i)+4.d0*k3(i))
-    enddo
+    ! Càlcul del vector yyout 
+    yyout=yyin+dx/9.d0*(2.d0*k1+3.d0*k2+4.d0*k3)
 
     return 
 end subroutine RLSTN3
@@ -124,7 +122,7 @@ end subroutine RLSTN3
 ! Subrutina derivades --> Calcula la derivada de la funció (vectorial) a trobar
 subroutine derivades(nequ,x,yin,dyout)
     ! nequ --> nombre d'equacions
-    ! x --> Punt on es calcula la derivada
+    ! x --> Variable independent del problema
     ! yin --> Vector amb les dades del punt on es calcula la derivada
     ! dyout --> Vector amb les derivades
     implicit none
@@ -193,25 +191,26 @@ subroutine artiller(E1,E2,nequs,npassos,vectphi)
             yyin=yyout
         enddo
         phiE3=vectphi(N)
-        write(11,*) E3,phiE3
+        write(11,*) E3,phiE3 
 
         if (abs(phiE3).lt.0.00005d0) then
-            print*,E3
+            print*,E3 ! Print prescindible
             exit
         else
             E1=E2
             E2=E3
         endif 
     enddo
+
     return
 end subroutine artiller
 
 ! Subrutina trapezoids --> Calcula una integral 1-D per trapezis
 subroutine trapezoids(x1,x2,ndim,funci,integral)
     ! x1,x2 --> Punts inicial i Final 
-    ! ndim --> nombre de dimensions del vector funció
-    ! funci --> vector funció (conté totes les imatges)
-    ! integral --> pues eso
+    ! ndim --> Nombre de dimensions del vector funció
+    ! funci --> Vector funció (conté totes les imatges)
+    ! integral --> Valor de la integral a calcular
     implicit none
     double precision x1,x2,integral,funci(ndim)
     integer i,ndim
@@ -227,9 +226,12 @@ end subroutine trapezoids
 
 ! Subrutina write --> Escriu dues línies en blanc en un arxiu
 subroutine write(arxiu)
+    ! arxiu --> número de l'arxiu
     implicit none
     integer arxiu
+
     write(arxiu,*) ""
     write(arxiu,*) ""
+
     return
 end subroutine
